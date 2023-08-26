@@ -1,37 +1,20 @@
 import { BadRequestException, Injectable, Logger, NotFoundException } from '@nestjs/common';
-import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
-import { DataSource, DeepPartial, In, Repository } from 'typeorm';
+import { DeepPartial } from 'typeorm';
 import { LocationEntity } from '../../database/entities/location.entity';
-import { ProductEntity } from '../../database/entities/product.entity';
-import { RackEntity } from '../../database/entities/rack.entity';
-import { SectionEntity } from '../../database/entities/section.entity';
-import { ILocationEntity } from '../../database/models/location.models';
-import { ILocationFindReq, ILocationFindRes } from './models/find.models';
+import { LocationRepository } from './location.repository';
+import { LocationUtils } from './location.utils';
+import { ILocationFindParams, ILocationFindPlace } from './models/find.models';
 import { ILocationUpdate } from './models/update.models';
 
 @Injectable()
 export class LocationService {
 
     private readonly logger: Logger;
-    private readonly dataSource: DataSource;
-    private readonly locationRepository: Repository<LocationEntity>;
-    private readonly rackRepository: Repository<RackEntity>;
-    private readonly sectionRepository: Repository<SectionEntity>;
-    private readonly productRepository: Repository<ProductEntity>;
+    private readonly locationRepository: LocationRepository;
 
-    constructor(
-        @InjectDataSource() dataSource: DataSource,
-        @InjectRepository(LocationEntity) locationRepository: Repository<LocationEntity>,
-        @InjectRepository(RackEntity) rackRepository: Repository<RackEntity>,
-        @InjectRepository(SectionEntity) sectionRepository: Repository<SectionEntity>,
-        @InjectRepository(ProductEntity) productRepository: Repository<ProductEntity>,
-    ) {
+    constructor(locationRepository: LocationRepository) {
         this.logger = new Logger(LocationService.name);
-        this.dataSource = dataSource;
         this.locationRepository = locationRepository;
-        this.rackRepository = rackRepository;
-        this.sectionRepository = sectionRepository;
-        this.productRepository = productRepository;
     }
 
 
@@ -42,57 +25,34 @@ export class LocationService {
      * @returns Массив локаций запрошенного товара. Для каждой локации будут указаны:
      * стеллаж-секция, доступное количество товара, необходимое число товара
      */
-    public async findProduct(request: ILocationFindReq): Promise<ILocationFindRes[]> {
-        const productEntity = await this.productRepository.findOne({
-            where: { id: request.product },
-        });
-        if (!productEntity) {
-            throw new NotFoundException(`Could not find product ${request.product}`);
-        }
+    public async findProduct(request: ILocationFindParams): Promise<ILocationFindPlace[]> {
+        const productEntity = await this.locationRepository.findProductOrNotFound(request.product);
 
-        const total = await this.locationRepository.sum('quantity', {
-            product: productEntity,
-        });
+        const total = await this.locationRepository.getTotal(productEntity);
         if (!total || total < request.quantity) {
             throw new BadRequestException(`Too low stocks for product "${productEntity.id}"`);
         }
 
-        /**
-         * Используется Readable для оптимизации запросов
-         * Таким образом получение данных будет остановлено
-         * при достижении запрошенного число товара
-         */
-        const response: ILocationFindRes[] = [];
-        const stream = await this.dataSource
-            .createQueryBuilder()
-            .select('*')
-            .from(LocationEntity, 'l')
-            .where({ product: request.product })
-            .stream();
+        const response: ILocationFindPlace[] = [];
 
-        await new Promise<void>((resolve, reject) => {
-            stream.on('result', (row: ILocationEntity) => {
-                if (stream.destroyed === false) {
-                    response.push({
-                        location: [row.rack, row.section].join('-'),
-                        quantity: row.quantity,
-                        order: row.quantity,
-                    });
+        const stream = this.locationRepository.streamByProduct(request.product);
+        for await (const entity of stream) {
+            const rackID = String(entity.rack?.id ?? entity.rack);
+            const sectionID = Number(entity.section?.id ?? entity.section);
+            const location = LocationUtils.getID(rackID, sectionID);
 
-                    const sum = response.reduce((acc, i) => acc + i.quantity, 0);
-                    if (sum >= request.quantity) {
-                        response[response.length - 1].order -= sum - request.quantity;
-                        stream.destroy();
-                    }
-                }
+            response.push({
+                location,
+                quantity: entity.quantity,
+                order: entity.quantity,
             });
-            stream.on('close', () => {
-                resolve();
-            });
-            stream.on('error', (e) => {
-                reject(e);
-            });
-        });
+
+            const sum = response.reduce((acc, i) => acc + i.quantity, 0);
+            if (sum >= request.quantity) {
+                response[response.length - 1].order -= sum - request.quantity;
+                break;
+            }
+        }
 
         return response;
     }
@@ -100,36 +60,19 @@ export class LocationService {
 
     public async incomeProducts(request: ILocationUpdate): Promise<void> {
         try {
-            const [rack_id, section_id] = request.location.split('-');
+            const [rack, section] = LocationUtils.getEntries(request.location);
             const products = request.products.map((p) => p.id);
-            const productsEntities = await this.productRepository.find({
-                where: { id: In(products) },
-            });
-            const sectionEntity = await this.sectionRepository.findOne({
-                where: { id: +section_id },
-            });
-            if (!sectionEntity) {
-                throw new NotFoundException(`Could not find section ${section_id}`);
-            }
-            const rackEntity = await this.rackRepository.findOne({
-                where: { id: rack_id },
-            });
-            if (!rackEntity) {
-                throw new NotFoundException(`Could not find rack ${rack_id}`);
-            }
 
-            await this.locationRepository.manager.transaction(async(em) => {
-                const previousLocations = await em.find(LocationEntity, {
-                    where: {
-                        rack: rackEntity,
-                        section: sectionEntity,
-                        product: In(products),
-                    },
-                    relations: {
-                        rack: true,
-                        section: true,
-                        product: true,
-                    },
+            const productsEntities = await this.locationRepository.findProducts(products);
+            const rackEntity = await this.locationRepository.findRackOrNotFound(rack);
+            const sectionEntity = await this.locationRepository.findSectionOrNotFound(+section);
+
+            await this.locationRepository.transaction(async(em) => {
+                const previousLocations = await this.locationRepository.findPrevious({
+                    rack: rackEntity,
+                    section: sectionEntity,
+                    products: productsEntities,
+                    manager: em,
                 });
 
                 this.logger.log(`Read ${previousLocations.length} products from rack "${rackEntity.id}" on section "${sectionEntity.id}"`);
@@ -171,36 +114,19 @@ export class LocationService {
 
     public async orderProducts(request: ILocationUpdate): Promise<void> {
         try {
-            const [rack_id, section_id] = request.location.split('-');
+            const [rack, section] = LocationUtils.getEntries(request.location);
             const products = request.products.map((p) => p.id);
-            const productsEntities = await this.productRepository.find({
-                where: { id: In(products) },
-            });
-            const sectionEntity = await this.sectionRepository.findOne({
-                where: { id: +section_id },
-            });
-            if (!sectionEntity) {
-                throw new NotFoundException(`Could not find section ${section_id}`);
-            }
-            const rackEntity = await this.rackRepository.findOne({
-                where: { id: rack_id },
-            });
-            if (!rackEntity) {
-                throw new NotFoundException(`Could not find rack ${rack_id}`);
-            }
 
-            await this.locationRepository.manager.transaction(async(em) => {
-                const previousLocations = await em.find(LocationEntity, {
-                    where: {
-                        rack: rackEntity,
-                        section: sectionEntity,
-                        product: In(products),
-                    },
-                    relations: {
-                        rack: true,
-                        section: true,
-                        product: true,
-                    },
+            const productsEntities = await this.locationRepository.findProducts(products);
+            const sectionEntity = await this.locationRepository.findSectionOrNotFound(+section);
+            const rackEntity = await this.locationRepository.findRackOrNotFound(rack);
+
+            await this.locationRepository.transaction(async(em) => {
+                const previousLocations = await this.locationRepository.findPrevious({
+                    rack: rackEntity,
+                    section: sectionEntity,
+                    products: productsEntities,
+                    manager: em,
                 });
 
                 this.logger.log(`Read ${previousLocations.length} products from rack "${rackEntity.id}" on section "${sectionEntity.id}"`);

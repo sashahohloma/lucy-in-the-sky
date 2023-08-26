@@ -5,6 +5,7 @@ import { ProductEntity } from '../../database/entities/product.entity';
 import { RackEntity } from '../../database/entities/rack.entity';
 import { SectionEntity } from '../../database/entities/section.entity';
 import { LocationController } from './location.controller';
+import { LocationRepository } from './location.repository';
 import { LocationService } from './location.service';
 
 @Module({
@@ -17,6 +18,7 @@ import { LocationService } from './location.service';
         ]),
     ],
     providers: [
+        LocationRepository,
         LocationService,
     ],
     controllers: [

@@ -2,7 +2,7 @@
     "maxWorkers": 1,
     "moduleFileExtensions": ["ts", "js"],
     "testMatch": [
-        "**/tests/**/*.spec.ts"
+        "<rootDir>/**/*.spec.ts"
     ],
     "transform": {
         "^.+\\.ts$": "ts-jest"

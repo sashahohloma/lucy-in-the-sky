@@ -14,10 +14,10 @@
     "dev:lint": "eslint ./source --ext .ts",
     "dev:format": "npm run dev:lint -- --fix",
     "dev:upgrade": "npm install $(npm outdated | cut -d' ' -f 1 | sed '1d' | xargs -I '$' echo '$@latest' | xargs echo)",
-    "migrate:generate": "ts-node ./node_modules/typeorm/cli.js migration:generate ./source/database/migrations -d datasource.ts",
-    "migrate:run": "ts-node ./node_modules/typeorm/cli.js migration:run -d datasource.ts",
-    "migrate:revert": "ts-node ./node_modules/typeorm/cli.js migration:revert -d datasource.ts",
-    "seed:run": "ts-node ./node_modules/@jorgebodega/typeorm-seeding/dist/cli.js seed -d datasource.ts ./source/database/seed/*.seed.ts"
+    "migrate:generate": "ts-node ./node_modules/typeorm/cli.js migration:generate ./source/database/migrations -d ./source/datasource.ts",
+    "migrate:run": "ts-node ./node_modules/typeorm/cli.js migration:run -d ./source/datasource.ts",
+    "migrate:revert": "ts-node ./node_modules/typeorm/cli.js migration:revert -d ./source/datasource.ts",
+    "seed:run": "ts-node ./node_modules/@jorgebodega/typeorm-seeding/dist/cli.js seed -d ./source/datasource.ts ./source/database/seeders/*.seeder.ts"
   },
   "keywords": [],
   "author": "Alexander Smirnov",

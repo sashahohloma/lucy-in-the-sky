@@ -1,12 +1,12 @@
 import { Transform } from 'class-transformer';
-import { Contains, IsNotEmpty, IsPositive, IsString } from 'class-validator';
-import { ILocationFindReq } from '../models/find.models';
+import { IsNotEmpty, IsPositive, IsString, Matches } from 'class-validator';
+import { ILocationFindParams } from '../models/find.models';
 
-export class LocationFindDto implements ILocationFindReq {
+export class LocationFindDto implements ILocationFindParams {
 
     @IsString()
     @IsNotEmpty()
-    @Contains(' ')
+    @Matches(/L\d{5}\sS\w{1}/, { message: 'Product should match pattern' })
     public product!: string;
 
     @Transform((p) => Number.parseInt(p.value))

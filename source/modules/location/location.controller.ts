@@ -3,7 +3,7 @@ import { LogsInterceptor } from '../logs/logs.interceptor';
 import { LocationFindDto } from './dto/find.dto';
 import { LocationUpdateDto } from './dto/update.dto';
 import { LocationService } from './location.service';
-import { ILocationFindRes } from './models/find.models';
+import { ILocationFindPlace } from './models/find.models';
 
 @UsePipes(new ValidationPipe({
     transform: true,
@@ -24,7 +24,7 @@ export class LocationController {
     @HttpCode(HttpStatus.OK)
     @Version('1')
     @Get('location/find')
-    public async find(@Query() query: LocationFindDto): Promise<ILocationFindRes[]> {
+    public async find(@Query() query: LocationFindDto): Promise<ILocationFindPlace[]> {
         const location = await this.locationService.findProduct(query);
         return location;
     }

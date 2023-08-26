@@ -1,10 +1,10 @@
 import { config } from 'dotenv';
 import { DataSource } from 'typeorm';
-import { LocationEntity } from './source/database/entities/location.entity';
-import { LogsEntity } from './source/database/entities/logs.entity';
-import { ProductEntity } from './source/database/entities/product.entity';
-import { RackEntity } from './source/database/entities/rack.entity';
-import { SectionEntity } from './source/database/entities/section.entity';
+import { LocationEntity } from './database/entities/location.entity';
+import { LogsEntity } from './database/entities/logs.entity';
+import { ProductEntity } from './database/entities/product.entity';
+import { RackEntity } from './database/entities/rack.entity';
+import { SectionEntity } from './database/entities/section.entity';
 
 config();
 

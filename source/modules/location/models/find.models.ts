@@ -1,9 +1,9 @@
-export interface ILocationFindReq {
+export interface ILocationFindParams {
     product: string;
     quantity: number;
 }
 
-export interface ILocationFindRes {
+export interface ILocationFindPlace {
     location: string;
     quantity: number;
     order: number;
