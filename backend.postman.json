@@ -1,0 +1,543 @@
+{
+	"info": {
+		"_postman_id": "88a9e740-09c6-4547-abc5-b7d3b2a6008c",
+		"name": "Backend",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "23724034"
+	},
+	"item": [
+		{
+			"name": "Location",
+			"item": [
+				{
+					"name": "Find",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{backend_host}}/api/v1/location/find?product=L10082 SS&quantity=11",
+							"host": [
+								"{{backend_host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"location",
+								"find"
+							],
+							"query": [
+								{
+									"key": "product",
+									"value": "L10082 SS"
+								},
+								{
+									"key": "quantity",
+									"value": "11"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Locations list",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{backend_host}}/api/v1/location/find?product=L10082 SS&quantity=31",
+									"host": [
+										"{{backend_host}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"location",
+										"find"
+									],
+									"query": [
+										{
+											"key": "product",
+											"value": "L10082 SS"
+										},
+										{
+											"key": "quantity",
+											"value": "31"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "content-type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "content-length",
+									"value": "262"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 26 Aug 2023 07:24:18 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=72"
+								}
+							],
+							"cookie": [],
+							"body": "[\n    {\n        \"location\": \"BA-2\",\n        \"quantity\": 7,\n        \"order\": 7\n    },\n    {\n        \"location\": \"CA-10\",\n        \"quantity\": 10,\n        \"order\": 10\n    },\n    {\n        \"location\": \"CA-6\",\n        \"quantity\": 3,\n        \"order\": 3\n    },\n    {\n        \"location\": \"CB-9\",\n        \"quantity\": 2,\n        \"order\": 2\n    },\n    {\n        \"location\": \"CB-8\",\n        \"quantity\": 6,\n        \"order\": 6\n    },\n    {\n        \"location\": \"BA-1\",\n        \"quantity\": 7,\n        \"order\": 3\n    }\n]"
+						},
+						{
+							"name": "Find",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{backend_host}}/api/v1/location/find",
+									"host": [
+										"{{backend_host}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"location",
+										"find"
+									],
+									"query": [
+										{
+											"key": "product",
+											"value": "L10082 SS",
+											"disabled": true
+										},
+										{
+											"key": "quantity",
+											"value": "31",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "content-type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "content-length",
+									"value": "180"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 26 Aug 2023 07:24:39 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=72"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": [\n        \"product must contain a   string\",\n        \"product should not be empty\",\n        \"product must be a string\",\n        \"quantity must be a positive number\"\n    ],\n    \"error\": \"Bad Request\",\n    \"statusCode\": 400\n}"
+						}
+					]
+				},
+				{
+					"name": "Income",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"location\": \"AB-4\",\n    \"products\": [{\n        \"id\": \"L10082 SS\",\n        \"quantity\": 10\n    }]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{backend_host}}/api/v1/location/income",
+							"host": [
+								"{{backend_host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"location",
+								"income"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"location\": \"AB-4\",\n    \"products\": [{\n        \"id\": \"L10082 SS\",\n        \"quantity\": 10\n    }]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{backend_host}}/api/v1/location/income",
+									"host": [
+										"{{backend_host}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"location",
+										"income"
+									]
+								}
+							},
+							"status": "No Content",
+							"code": 204,
+							"_postman_previewlanguage": "plain",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Sat, 26 Aug 2023 07:24:55 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=72"
+								}
+							],
+							"cookie": [],
+							"body": null
+						},
+						{
+							"name": "Empty body",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{backend_host}}/api/v1/location/income",
+									"host": [
+										"{{backend_host}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"location",
+										"income"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "content-type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "content-length",
+									"value": "205"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 26 Aug 2023 07:25:21 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=72"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": [\n        \"location must contain a - string\",\n        \"location should not be empty\",\n        \"location must be a string\",\n        \"products should not be empty\",\n        \"products must be an array\"\n    ],\n    \"error\": \"Bad Request\",\n    \"statusCode\": 400\n}"
+						}
+					]
+				},
+				{
+					"name": "Order",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"location\": \"AB-4\",\n    \"products\": [{\n        \"id\": \"L10082 SS\",\n        \"quantity\": 5\n    }]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{backend_host}}/api/v1/location/order",
+							"host": [
+								"{{backend_host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"location",
+								"order"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"location\": \"AB-4\",\n    \"products\": [{\n        \"id\": \"L10082 SS\",\n        \"quantity\": 5\n    }]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{backend_host}}/api/v1/location/order",
+									"host": [
+										"{{backend_host}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"location",
+										"order"
+									]
+								}
+							},
+							"status": "No Content",
+							"code": 204,
+							"_postman_previewlanguage": "plain",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Sat, 26 Aug 2023 07:26:00 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=72"
+								}
+							],
+							"cookie": [],
+							"body": null
+						},
+						{
+							"name": "Empty body",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{backend_host}}/api/v1/location/order",
+									"host": [
+										"{{backend_host}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"location",
+										"order"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "content-type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "content-length",
+									"value": "205"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 26 Aug 2023 07:26:12 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=72"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": [\n        \"location must contain a - string\",\n        \"location should not be empty\",\n        \"location must be a string\",\n        \"products should not be empty\",\n        \"products must be an array\"\n    ],\n    \"error\": \"Bad Request\",\n    \"statusCode\": 400\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Products",
+			"item": [
+				{
+					"name": "List paginated",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{backend_host}}/api/v1/products/list",
+							"host": [
+								"{{backend_host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"products",
+								"list"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "First page",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{backend_host}}/api/v1/products/list?page=1&limit=20",
+									"host": [
+										"{{backend_host}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"products",
+										"list"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "1"
+										},
+										{
+											"key": "limit",
+											"value": "20"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "content-type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "content-length",
+									"value": "1820"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 26 Aug 2023 07:16:36 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=72"
+								}
+							],
+							"cookie": [],
+							"body": "[\n    {\n        \"id\": \"L17145 SM\",\n        \"title\": \"Practical Bronze Gloves\",\n        \"updated_at\": \"2023-05-24T20:05:34.504Z\"\n    },\n    {\n        \"id\": \"L17826 SS\",\n        \"title\": \"Incredible Metal Fish\",\n        \"updated_at\": \"2022-12-26T03:11:34.359Z\"\n    },\n    {\n        \"id\": \"L18355 SM\",\n        \"title\": \"Fantastic Concrete Tuna\",\n        \"updated_at\": \"2023-06-24T18:05:04.131Z\"\n    },\n    {\n        \"id\": \"L18375 SL\",\n        \"title\": \"Handmade Plastic Pizza\",\n        \"updated_at\": \"2022-10-12T14:11:24.356Z\"\n    },\n    {\n        \"id\": \"L19321 SL\",\n        \"title\": \"Unbranded Granite Computer\",\n        \"updated_at\": \"2022-12-25T02:06:15.466Z\"\n    },\n    {\n        \"id\": \"L19434 SS\",\n        \"title\": \"Incredible Plastic Chair\",\n        \"updated_at\": \"2022-11-06T17:09:33.851Z\"\n    },\n    {\n        \"id\": \"L19880 SS\",\n        \"title\": \"Gorgeous Wooden Bacon\",\n        \"updated_at\": \"2023-03-23T05:42:58.924Z\"\n    },\n    {\n        \"id\": \"L20144 SM\",\n        \"title\": \"Licensed Granite Pants\",\n        \"updated_at\": \"2022-12-24T18:32:37.467Z\"\n    },\n    {\n        \"id\": \"L20882 SS\",\n        \"title\": \"Ergonomic Frozen Ball\",\n        \"updated_at\": \"2023-05-19T22:37:54.620Z\"\n    },\n    {\n        \"id\": \"L21463 SS\",\n        \"title\": \"Ergonomic Wooden Bacon\",\n        \"updated_at\": \"2023-01-31T11:14:11.035Z\"\n    },\n    {\n        \"id\": \"L22520 SL\",\n        \"title\": \"Licensed Bronze Ball\",\n        \"updated_at\": \"2023-01-18T05:17:35.425Z\"\n    },\n    {\n        \"id\": \"L22708 SS\",\n        \"title\": \"Electronic Metal Chips\",\n        \"updated_at\": \"2023-04-22T18:48:35.043Z\"\n    },\n    {\n        \"id\": \"L23045 SL\",\n        \"title\": \"Ergonomic Soft Shoes\",\n        \"updated_at\": \"2023-04-26T15:00:48.351Z\"\n    },\n    {\n        \"id\": \"L24336 SM\",\n        \"title\": \"Modern Metal Salad\",\n        \"updated_at\": \"2023-05-18T12:56:32.712Z\"\n    },\n    {\n        \"id\": \"L24697 SS\",\n        \"title\": \"Practical Rubber Shirt\",\n        \"updated_at\": \"2022-12-28T02:37:16.683Z\"\n    },\n    {\n        \"id\": \"L25054 SS\",\n        \"title\": \"Tasty Bronze Soap\",\n        \"updated_at\": \"2023-04-05T17:50:33.833Z\"\n    },\n    {\n        \"id\": \"L25205 SM\",\n        \"title\": \"Rustic Metal Chicken\",\n        \"updated_at\": \"2023-06-25T17:41:47.292Z\"\n    },\n    {\n        \"id\": \"L25955 SS\",\n        \"title\": \"Modern Soft Soap\",\n        \"updated_at\": \"2023-05-19T01:22:57.080Z\"\n    },\n    {\n        \"id\": \"L26324 SS\",\n        \"title\": \"Licensed Cotton Salad\",\n        \"updated_at\": \"2023-05-18T09:37:12.930Z\"\n    },\n    {\n        \"id\": \"L27241 SM\",\n        \"title\": \"Licensed Soft Bike\",\n        \"updated_at\": \"2023-06-30T08:21:07.682Z\"\n    }\n]"
+						},
+						{
+							"name": "List paginated",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{backend_host}}/api/v1/products/list",
+									"host": [
+										"{{backend_host}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"products",
+										"list"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "content-type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "content-length",
+									"value": "154"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 26 Aug 2023 07:23:41 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=72"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": [\n        \"limit must not be greater than 100\",\n        \"limit must not be less than 1\",\n        \"page must be a positive number\"\n    ],\n    \"error\": \"Bad Request\",\n    \"statusCode\": 400\n}"
+						}
+					]
+				}
+			]
+		}
+	]
+}

@@ -24,17 +24,17 @@ services:
       timeout: 10s
       retries: 10
 
-  # backend:
-  #   container_name: lucy_backend
-  #   restart: on-failure
-  #   env_file:
-  #     - ./.env.docker
-  #   build:
-  #     context: .
-  #   networks:
-  #     - lucy_network
-  #   ports:
-  #     - ${APP_PORT}:${APP_PORT}
-  #   depends_on:
-  #     mysql:
-  #       condition: service_healthy
+  backend:
+    container_name: lucy_backend
+    restart: on-failure
+    env_file:
+      - ./.env.docker
+    build:
+      context: .
+    networks:
+      - lucy_network
+    ports:
+      - ${APP_PORT}:${APP_PORT}
+    depends_on:
+      mysql:
+        condition: service_healthy

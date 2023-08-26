@@ -17,7 +17,7 @@
     "migrate:generate": "ts-node ./node_modules/typeorm/cli.js migration:generate ./source/database/migrations -d ./source/datasource.ts",
     "migrate:run": "ts-node ./node_modules/typeorm/cli.js migration:run -d ./source/datasource.ts",
     "migrate:revert": "ts-node ./node_modules/typeorm/cli.js migration:revert -d ./source/datasource.ts",
-    "seed:run": "ts-node ./node_modules/@jorgebodega/typeorm-seeding/dist/cli.js seed -d ./source/datasource.ts ./source/database/seeders/*.seeder.ts"
+    "seeder:run": "ts-node ./node_modules/@jorgebodega/typeorm-seeding/dist/cli.js seed -d ./source/datasource.ts ./source/database/seeders/*.seeder.ts"
   },
   "keywords": [],
   "author": "Alexander Smirnov",
